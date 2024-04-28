@@ -71,7 +71,7 @@ app.post('/stripe', express.raw({type: 'application/json'}), (request, response)
       break;
     // ... handle other event types
     case 'payment_intent.succeeded':
-      const paymentIntentSucceeded = event.data.object;
+     
       sendMail('Payment Succeeded', event.type)
       
       // Then define and call a function to handle the event payment_intent.succeeded

@@ -73,20 +73,22 @@ app.post('/stripe', express.raw({type: 'application/json'}), (request, response)
   switch (event.type) {
     case 'payment_intent.created':
       const paymentIntentSucceeded = event.data.object;
-      sendMail('Payment Created', event.type)
+      SendMail('Payment Created', event.type)
       
       // Then define and call a function to handle the event payment_intent.created
       break;
     // ... handle other event types
     case 'payment_intent.succeeded':
      
-      sendMail('Payment Succeeded', event.type)
+      SendMail('Payment Succeeded', event.type)
       
       // Then define and call a function to handle the event payment_intent.succeeded
       break;
     // ... handle other event types
     default:
       console.log(`Unhandled event type ${event.type}`);
+      
+      SendMail('Unhandled event type', event.type)
   }
 
   // Return a 200 response to acknowledge receipt of the event

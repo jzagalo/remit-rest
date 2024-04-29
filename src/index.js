@@ -8,16 +8,14 @@ const stripe = require('stripe')(
   'sk_test_51OlqZyH3cCklqfTbwcIVJts95VXuoEUL8e5NT1ej8Pw97kWpIibqLlayIL7DCpCgHww3NDBNGgfWRLoeIpL3uNjh00J95sj1fI'
 );
 const app = express();
-const PORT = 3000;
+const PORT = 4242;
 
 app.use(bodyParser.json());
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use('/payments', paymentRoutes);
 
-app.get('/', (req, res) => {
-  res.send('<h2>Hello world </h2>');
-});
+
 
 app.get('/mail', (req, res) => {
   res.send('<h2>Hello world </h2>');
@@ -53,12 +51,16 @@ function SendMail(heading, message){
 }
 
 
-
+app.get('/', (req, res) => {
+  SendMail('Test Route', "Dummy Email")
+  res.send('<h2>Hello world </h2>');
+});
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 const endpointSecret = "whsec_87df9489a44c5728c2bc4fdefc576f2eec22ae9fcfade1601778dc7e5e3e1352";
 
-app.post('/stripe', express.raw({type: 'application/json'}), (request, response) => {
+app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
   const sig = request.headers['stripe-signature'];
+  console.log("Succeeded");
 
   let event;
 
@@ -74,6 +76,7 @@ app.post('/stripe', express.raw({type: 'application/json'}), (request, response)
     case 'payment_intent.created':
       const paymentIntentSucceeded = event.data.object;
       SendMail('Payment Created', event.type)
+      console.log("Payment created")
       
       // Then define and call a function to handle the event payment_intent.created
       break;
@@ -81,6 +84,7 @@ app.post('/stripe', express.raw({type: 'application/json'}), (request, response)
     case 'payment_intent.succeeded':
      
       SendMail('Payment Succeeded', event.type)
+      console.log("Payment Succeeded")
       
       // Then define and call a function to handle the event payment_intent.succeeded
       break;

@@ -10,9 +10,18 @@ const stripe = require('stripe')(
 const app = express();
 const PORT = 4242;
 
-
-app.use('/webhook', express.raw({ type: 'application/json' }));
-app.use(bodyParser.json());
+app.use('/api/subs/stripe-webhook', bodyParser.raw({type: "*/*"}))
+/*app.use(
+  bodyParser.json({
+    verify: (req, res, buf) => {
+      const url = req.originalUrl;
+      if (url.startsWith('/api/stripe/webhook')) {
+        req.rawBody = buf.toString();
+      }
+    }
+  })
+);*/
+app.use(express.json());
 
 
 // app.use('/products', productRoutes);

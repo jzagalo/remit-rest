@@ -11,16 +11,13 @@ const app = express();
 const PORT = 4242;
 
 app.use('/api/subs/stripe-webhook', bodyParser.raw({type: "*/*"}))
-/*app.use(
+app.use(
   bodyParser.json({
-    verify: (req, res, buf) => {
-      const url = req.originalUrl;
-      if (url.startsWith('/api/stripe/webhook')) {
-        req.rawBody = buf.toString();
+      verify: function(req, res, buf) {
+          req.rawBody = buf;
       }
-    }
   })
-);*/
+);
 app.use(express.json());
 
 
@@ -73,11 +70,12 @@ const endpointSecret = "whsec_87df9489a44c5728c2bc4fdefc576f2eec22ae9fcfade16017
 
 app.post('/webhook',express.raw({ type: 'application/json' }) ,(request, response) => {
   const sig = request.headers['stripe-signature'];
+  const rawBody = request.rawBody;
 
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
   } catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;

@@ -10,9 +10,11 @@ const stripe = require('stripe')(
 const app = express();
 const PORT = 4242;
 
+
+app.use('/webhook', express.raw({ type: 'application/json' }));
 app.use(bodyParser.json());
 
-app.use('/webhook', express.raw({type: '*/*' }));
+
 // app.use('/products', productRoutes);
 // app.use('/orders', orderRoutes);
 app.use('/payments', paymentRoutes);
@@ -66,7 +68,7 @@ app.post('/webhook', async (request, response) => {
   let event;
 
   try {
-    event = await stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
+    event = await stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;

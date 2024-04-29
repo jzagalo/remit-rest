@@ -19,11 +19,19 @@ app.get('/', (req, res) => {
   res.send('<h2>Hello world </h2>');
 });
 
+app.get('/mail', (req, res) => {
+  res.send('<h2>Hello world </h2>');
+});
+
+
 var transporter = nodemailer.createTransport({
   service: 'gmail',
+  host: `smtp.gmail.com`,
+  port: 465,
+  secure: true,
   auth: {
     user: 'paulezaga@gmail.com',
-    pass: 'Mfmkassel2019'
+    pass: 'brjo vtjw ebfy mlav'
   }
 });
 

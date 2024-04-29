@@ -11,8 +11,8 @@ const app = express();
 const PORT = 4242;
 
 app.use(bodyParser.json());
-app.use('/products', productRoutes);
-app.use('/orders', orderRoutes);
+// app.use('/products', productRoutes);
+// app.use('/orders', orderRoutes);
 app.use('/payments', paymentRoutes);
 
 

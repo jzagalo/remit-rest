@@ -1,6 +1,6 @@
 const express = require('express');
-const productRoutes = require('./router/productRoutes');
-const orderRoutes = require('./router/orderRoutes');
+// const productRoutes = require('./router/productRoutes');
+// const orderRoutes = require('./router/orderRoutes');
 const paymentRoutes = require('./router/paymentRoutes');
 const bodyParser = require('body-parser');
 var nodemailer = require('nodemailer');

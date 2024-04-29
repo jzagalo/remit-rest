@@ -52,7 +52,7 @@ function SendMail(heading, message){
 
 
 app.get('/', (req, res) => {
-  SendMail('Test Route', "Dummy Email")
+ 
   res.send('<h2>Hello world </h2>');
 });
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
@@ -60,7 +60,6 @@ const endpointSecret = "whsec_87df9489a44c5728c2bc4fdefc576f2eec22ae9fcfade16017
 
 app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
   const sig = request.headers['stripe-signature'];
-  console.log("Succeeded");
 
   let event;
 
@@ -71,29 +70,55 @@ app.post('/webhook', express.raw({type: 'application/json'}), (request, response
     return;
   }
 
+  
   // Handle the event
-  switch (event.type) {
-    case 'payment_intent.created':
-      const paymentIntentSucceeded = event.data.object;
-      SendMail('Payment Created', event.type)
-      console.log("Payment created")
-      
-      // Then define and call a function to handle the event payment_intent.created
-      break;
-    // ... handle other event types
-    case 'payment_intent.succeeded':
-     
-      SendMail('Payment Succeeded', event.type)
-      console.log("Payment Succeeded")
-      
-      // Then define and call a function to handle the event payment_intent.succeeded
-      break;
-    // ... handle other event types
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-      
-      SendMail('Unhandled event type', event.type)
-  }
+ // Handle the event
+ switch (event.type) {
+  case 'payment_intent.amount_capturable_updated':
+    const paymentIntentAmountCapturableUpdated = event.data.object;
+    SendMail('Payment Captured', event.type)
+    // Then define and call a function to handle the event payment_intent.amount_capturable_updated
+    break;
+  case 'payment_intent.canceled':
+    const paymentIntentCanceled = event.data.object;
+    SendMail('Payment Canceled', event.type)
+    // Then define and call a function to handle the event payment_intent.canceled
+    break;
+  case 'payment_intent.created':
+    const paymentIntentCreated = event.data.object;
+    SendMail('Payment Created', event.type)
+    // Then define and call a function to handle the event payment_intent.created
+    break;
+  case 'payment_intent.partially_funded':
+    const paymentIntentPartiallyFunded = event.data.object;
+    SendMail('Payment Partially Funded', event.type)
+    // Then define and call a function to handle the event payment_intent.partially_funded
+    break;
+  case 'payment_intent.payment_failed':
+    const paymentIntentPaymentFailed = event.data.object;
+    SendMail('Payment Failed', event.type)
+    // Then define and call a function to handle the event payment_intent.payment_failed
+    break;
+  case 'payment_intent.processing':
+    const paymentIntentProcessing = event.data.object;
+    SendMail('Payment Processing', event.type)
+    // Then define and call a function to handle the event payment_intent.processing
+    break;
+  case 'payment_intent.requires_action':
+    const paymentIntentRequiresAction = event.data.object;
+    SendMail('Payment Requires Action', event.type)
+    // Then define and call a function to handle the event payment_intent.requires_action
+    break;
+  case 'payment_intent.succeeded':
+    const paymentIntentSucceeded = event.data.object;
+    SendMail('Payment Succeeded', event.type)
+    // Then define and call a function to handle the event payment_intent.succeeded
+    break;
+  // ... handle other event types
+  default:
+    console.log(`Unhandled event type ${event.type}`);
+    SendMail('Payment Unhandled', event.type)
+}
 
   // Return a 200 response to acknowledge receipt of the event
   response.send();

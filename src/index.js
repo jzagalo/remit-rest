@@ -11,6 +11,8 @@ const app = express();
 const PORT = 4242;
 
 app.use(bodyParser.json());
+
+app.use('/webhook', express.raw({type: '*/*' }));
 // app.use('/products', productRoutes);
 // app.use('/orders', orderRoutes);
 app.use('/payments', paymentRoutes);
@@ -58,13 +60,13 @@ app.get('/', (req, res) => {
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 const endpointSecret = "whsec_87df9489a44c5728c2bc4fdefc576f2eec22ae9fcfade1601778dc7e5e3e1352";
 
-app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
+app.post('/webhook', async (request, response) => {
   const sig = request.headers['stripe-signature'];
 
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    event = await stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;

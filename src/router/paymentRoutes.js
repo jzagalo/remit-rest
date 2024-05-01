@@ -20,8 +20,7 @@ router.post('/intents', async (req, res) => {
       currency: 'eur',
       automatic_payment_methods: {
         enabled: true,
-      },
-      payment_method_types: ['card', 'klarna']
+      }
     });
     // Return the secret
     res.json({ 

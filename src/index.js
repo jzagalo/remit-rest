@@ -32,6 +32,38 @@ app.get('/mail', (req, res) => {
 });
 
 
+app.post("/create-setup-intent",async function (request, reply) {
+  // Use an existing Customer ID if this is a returning customer.
+   const customer = await stripe.customers.create();
+   const ephemeralKey = await stripe.ephemeralKeys.create(
+     {customer: customer.id},
+     {apiVersion: '2022-08-01'}
+   );
+   const setupIntent = await stripe.setupIntents.create({
+     customer: customer.id,
+   });
+   return {
+     setupIntent: setupIntent.client_secret,
+     ephemeralKey: ephemeralKey.secret,
+     customer: customer.id
+   }
+ });
+ /**
+  * Post method to accept parameters
+  * @params amount, currency, gateway
+  * @return PaymentIntent object
+  */
+ app.post("/init-payment",async function (request, reply) {
+ 
+ const paymentIntent = await stripe.paymentIntents.create({
+   amount: request?.body?.amount,
+   currency: request?.body?.currency,
+   payment_method_types: [request?.body?.gateway],
+ });
+   // The Handlebars template will use the parameter values to update the page with the chosen color
+   return paymentIntent;
+ });
+
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   host: `smtp.gmail.com`,

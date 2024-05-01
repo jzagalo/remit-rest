@@ -10,6 +10,7 @@ router.post('/intents', async (req, res) => {
     // create a PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({
       amount: req.body.amount, // Integer, usd -> pennies, eur -> cents
+      gateway: 'klarna',
       currency: 'usd',
       automatic_payment_methods: {
         enabled: true,

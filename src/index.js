@@ -154,7 +154,7 @@ app.post('/webhook',express.raw({ type: 'application/json' }) ,(request, respons
     break;
   case 'payment_intent.succeeded':
     const paymentIntentSucceeded = event.data.object;
-    SendMail('Payment Succeeded', event.type)
+    SendMail('Payment Succeeded', JSON.stringify(paymentIntentSucceeded))
     // Then define and call a function to handle the event payment_intent.succeeded
     break;
   // ... handle other event types

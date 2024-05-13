@@ -36,10 +36,12 @@ app.post("/create-setup-intent", async function (request, reply) {
   // Use an existing Customer ID if this is a returning customer.
 
   const session = await stripe.checkout.sessions.create({
-    metadata: request.body.metadata,   
+    payment_intent_data: {
+       metadata: request.body.metadata 
+    },   
     mode: 'payment',
    });
-   
+
    const customer = await stripe.customers.create();
    const ephemeralKey = await stripe.ephemeralKeys.create(
      {customer: customer.id},

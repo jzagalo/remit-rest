@@ -6,24 +6,7 @@ const stripe = require('stripe')(
 
 // router endpoints
 router.post('/intents', async (req, res) => {
-  const session = await stripe.checkout.sessions.create({
-   
-    mode: 'payment',
-    metadata: {
-      userId: 123, // here you can set the metadata
-    },
-    payment_intent_data:  {
-        metadata: {
-            userId: 123, // here you can set the metadata
-        },
-    },
-    subscription_data: {
-      trial_period_days: 1,
-    },
-    client_reference_id: 'asakdssda',
-    success_url: 'http://www.example.com/success',
-    cancel_url: 'http://www.example.com/failure',
-  });
+  
   const customer = await stripe.customers.create({
     metadata: {
       userId: 143, // here you can set the metadata

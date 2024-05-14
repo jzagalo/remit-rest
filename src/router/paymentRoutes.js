@@ -26,8 +26,8 @@ router.post('/intents', async (req, res) => {
       trial_period_days: 1,
     },
     client_reference_id: 'asakdssda',
-    success_url: '',
-    cancel_url: '',
+    success_url: 'http://www.example.com/success',
+    cancel_url: 'http://www.example.com/failure',
   });
   const customer = await stripe.customers.create({
     metadata: {

@@ -35,16 +35,12 @@ app.get('/mail', (req, res) => {
 app.post("/create-setup-intent", async function (request, reply) {
   // Use an existing Customer ID if this is a returning customer.
 
-  const session = await stripe.checkout.sessions.create({
-    payment_intent_data: {
-       metadata: request.body.metadata 
-    },   
-    mode: 'payment',
-   });
 
-   const customer = await stripe.customers.create();
+   const customer = await stripe.customers.create({
+      metadata: request.body.metadata
+   });
    const ephemeralKey = await stripe.ephemeralKeys.create(
-     {customer: customer.id},
+    { customer: customer.id},
      {apiVersion: '2022-08-01'}
    );
    const setupIntent = await stripe.setupIntents.create({

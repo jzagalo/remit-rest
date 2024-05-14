@@ -47,6 +47,7 @@ app.post("/create-setup-intent", async function (request, reply) {
             userId: 123, // here you can set the metadata
         },
     },
+    client_reference_id: 'asakdssda',
     success_url: '',
     cancel_url: '',
   });

@@ -7,12 +7,7 @@ const stripe = require('stripe')(
 // router endpoints
 router.post('/intents', async (req, res) => {
   const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-          price: 'price_1234567890',
-          quantity: 1,
-      },
-    ],
+   
     mode: 'payment',
     metadata: {
       userId: 123, // here you can set the metadata

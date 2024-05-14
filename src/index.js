@@ -34,7 +34,22 @@ app.get('/mail', (req, res) => {
 
 app.post("/create-setup-intent", async function (request, reply) {
   // Use an existing Customer ID if this is a returning customer.
-
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+          price: 'price_1234567890',
+          quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    payment_intent_data:  {
+        metadata: {
+            userId: 123, // here you can set the metadata
+        },
+    },
+    success_url: '',
+    cancel_url: '',
+  });
 
    const customer = await stripe.customers.create({
       metadata: request.body.metadata

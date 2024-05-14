@@ -6,7 +6,34 @@ const stripe = require('stripe')(
 
 // router endpoints
 router.post('/intents', async (req, res) => {
-  const customer = await stripe.customers.create();
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+          price: 'price_1234567890',
+          quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    metadata: {
+      userId: 123, // here you can set the metadata
+    },
+    payment_intent_data:  {
+        metadata: {
+            userId: 123, // here you can set the metadata
+        },
+    },
+    subscription_data: {
+      trial_period_days: 1,
+    },
+    client_reference_id: 'asakdssda',
+    success_url: '',
+    cancel_url: '',
+  });
+  const customer = await stripe.customers.create({
+    metadata: {
+      userId: 143, // here you can set the metadata
+  },
+  });
   const ephemeralKey = await stripe.ephemeralKeys.create(
     {customer: customer.id},
     {apiVersion: '2023-10-16'}
@@ -18,6 +45,9 @@ router.post('/intents', async (req, res) => {
       amount: req.body.amount, // Integer, usd -> pennies, eur -> cents
       customer: customer.id,
       currency: 'eur',
+      metadata: {
+        userId: 133, // here you can set the metadata
+    },
       automatic_payment_methods: {
         enabled: true,
       }

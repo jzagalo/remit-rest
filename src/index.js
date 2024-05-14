@@ -39,13 +39,17 @@ app.post("/create-setup-intent", async function (request, reply) {
    const customer = await stripe.customers.create({
       metadata: request.body.metadata
    });
+
    const ephemeralKey = await stripe.ephemeralKeys.create(
     { customer: customer.id},
      {apiVersion: '2022-08-01'}
    );
+   
    const setupIntent = await stripe.setupIntents.create({
      customer: customer.id,
+     metadata: request.body.metadata
    });
+
    return {
      setupIntent: setupIntent.client_secret,
      ephemeralKey: ephemeralKey.secret,

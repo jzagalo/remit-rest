@@ -38,6 +38,7 @@ app.post("/create-setup-intent", async function (request, reply) {
 
    const customer = await stripe.customers.create({
       metadata: request.body.metadata
+      
    });
 
    const ephemeralKey = await stripe.ephemeralKeys.create(
@@ -66,6 +67,7 @@ app.post("/create-setup-intent", async function (request, reply) {
  const paymentIntent = await stripe.paymentIntents.create({
    amount: request?.body?.amount,
    currency: request?.body?.currency,
+   metadata: { user: 'dodo', frame: 'Bobo' },
    payment_method_types: [request?.body?.gateway],
  });
    // The Handlebars template will use the parameter values to update the page with the chosen color

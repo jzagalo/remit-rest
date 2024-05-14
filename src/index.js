@@ -44,9 +44,9 @@ app.post("/create-setup-intent", async function (request, reply) {
     { customer: customer.id},
      {apiVersion: '2022-08-01'}
    );
-   
+
    const setupIntent = await stripe.setupIntents.create({
-     customer: customer.id,
+     customer,
      metadata: request.body.metadata
    });
 

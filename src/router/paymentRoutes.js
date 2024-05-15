@@ -17,7 +17,7 @@ router.post('/intents', async (req, res) => {
     {customer: customer.id},
     {apiVersion: '2024-04-10'}
   );
-  
+  const userId = req.body.acn + '#' + req.body.reason + '#' + req.body.sec_currency + '#' + req.body.reception
   try {
     // create a PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({
@@ -25,10 +25,7 @@ router.post('/intents', async (req, res) => {
       customer: customer.id,
       currency: 'eur',
       metadata: {      
-        acn: req.body.acn,
-        reason: req.body.reason,
-        sec_currency: req.body.sec_currency,
-        reception: req.body.reception
+        userId: userId
        },
       automatic_payment_methods: {
         enabled: true,

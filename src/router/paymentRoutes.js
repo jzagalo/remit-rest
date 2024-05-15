@@ -24,9 +24,12 @@ router.post('/intents', async (req, res) => {
       amount: req.body.amount, // Integer, usd -> pennies, eur -> cents
       customer: customer.id,
       currency: 'eur',
-      metadata: {
-        userId: req.body.metadata, // here you can set the metadata
-    },
+      metadata: {      
+        acn: req.body.acn,
+        reason: req.body.reason,
+        sec_currency: req.body.sec_currency,
+        reception: req.body.reception
+       },
       automatic_payment_methods: {
         enabled: true,
       }

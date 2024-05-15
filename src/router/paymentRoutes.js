@@ -1,3 +1,4 @@
+const { request } = require('express');
 const express = require('express');
 const router = express.Router();
 const stripe = require('stripe')(
@@ -14,7 +15,7 @@ router.post('/intents', async (req, res) => {
   });
   const ephemeralKey = await stripe.ephemeralKeys.create(
     {customer: customer.id},
-    {apiVersion: '2023-10-16'}
+    {apiVersion: '2024-04-10'}
   );
   
   try {
@@ -24,7 +25,7 @@ router.post('/intents', async (req, res) => {
       customer: customer.id,
       currency: 'eur',
       metadata: {
-        userId: 133, // here you can set the metadata
+        userId: req.body.metadata, // here you can set the metadata
     },
       automatic_payment_methods: {
         enabled: true,

@@ -1,4 +1,5 @@
 const express = require('express');
+const Flutterwave = require('flutterwave-node-v3');
 // const productRoutes = require('./router/productRoutes');
 // const orderRoutes = require('./router/orderRoutes');
 const paymentRoutes = require('./router/paymentRoutes');
@@ -9,6 +10,8 @@ const stripe = require('stripe')(
 );
 const app = express();
 const PORT = 4242;
+const flw = new Flutterwave('FLWPUBK_TEST-faf1fae2cceecc5f5a803645155e9000-X', 
+'FLWSECK_TEST-3e83d5c4eec721c8217e2cbf1bceb23d-X');
 
 app.use('/api/subs/stripe-webhook', bodyParser.raw({type: "*/*"}))
 app.use(
@@ -33,37 +36,9 @@ app.get('/mail', (req, res) => {
 
 
 app.post("/create-setup-intent", async function (request, reply) {
-  // Use an existing Customer ID if this is a returning customer.
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-          price: 'price_1234567890',
-          quantity: 1,
-      },
-    ],
-    mode: 'payment',
-    metadata: {
-      userId: 123, // here you can set the metadata
-    },
-    payment_intent_data:  {
-        metadata: {
-            userId: 123, // here you can set the metadata
-        },
-    },
-    subscription_data: {
-      trial_period_days: 1,
-    },
-    client_reference_id: 'asakdssda',
-    success_url: '',
-    cancel_url: '',
-  });
 
-   const customer = await stripe.customers.create({
-    metadata: {
-      userId: 123, // here you can set the metadata
-     }
-      
-   });
+  // Use an existing Customer ID if this is a returning customer.
+   const customer = await stripe.customers.create();
 
    const ephemeralKey = await stripe.ephemeralKeys.create(
     { customer: customer.id},
@@ -129,9 +104,18 @@ function SendMail(heading, message){
 }
 
 
-app.get('/', (req, res) => {
+app.get('/mock', async (req, res) => {
+  const transfer = await flw.Transfer.initiate({
+    account_bank: "044",
+    account_number: "0690000031",
+    amount: 200,
+    currency: "NGN",
+    callback_url: 'http://my-callback-url'
+  })
+
+  const final = await transfer;
  
-  res.send('<h2>Hello world </h2>');
+  res.json({ final });
 });
 // This is your Stripe CLI webhook secret for testing your endpoint locally.
 const endpointSecret = "whsec_38k8QWMV5VpjBfcxTx8BjZeHAHAU5g2J";
@@ -139,7 +123,7 @@ const endpointSecret = "whsec_38k8QWMV5VpjBfcxTx8BjZeHAHAU5g2J";
 // const endpointSecret = "whsec_87df9489a44c5728c2bc4fdefc576f2eec22ae9fcfade1601778dc7e5e3e1352";
 
 
-app.post('/webhook',express.raw({ type: 'application/json' }) ,(request, response) => {
+app.post('/webhook',express.raw({ type: 'application/json' }) , async (request, response) => {
   const sig = request.headers['stripe-signature'];
   const rawBody = request.rawBody;
 
@@ -194,6 +178,13 @@ app.post('/webhook',express.raw({ type: 'application/json' }) ,(request, respons
   case 'payment_intent.succeeded':
     const paymentIntentSucceeded = event.data.object;
     SendMail('Payment Succeeded', JSON.stringify(paymentIntentSucceeded))
+    await flw.Transfer.initiate({
+      account_bank: "044",
+      account_number: "0690000031",
+      amount: 200,
+      currency: "NGN",
+      callback_url: 'http://my-callback-url'
+    })
     // Then define and call a function to handle the event payment_intent.succeeded
     break;
   case 'refund.created':

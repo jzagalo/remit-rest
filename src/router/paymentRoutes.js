@@ -14,12 +14,19 @@ router.get('/verify', async (req, res) => {
     account_number: req.account_number,
     account_bank: req.account_bank
   }; 
-
-  const accDetails = await flw.Misc.verify_Account(details)
-  const result = await accDetails;
-  res.json({
-    result
-  });
+  try {
+    const accDetails = await flw.Misc.verify_Account(details)
+    const result = await accDetails;
+    res.json({
+      result
+    });
+    
+  } catch (e) {
+    res.status(400).json({
+      error: e.message,
+    });
+  }
+ 
 
 });
 

@@ -8,7 +8,7 @@ const stripe = require('stripe')(
 const flw = new Flutterwave('FLWPUBK_TEST-faf1fae2cceecc5f5a803645155e9000-X', 
 'FLWSECK_TEST-3e83d5c4eec721c8217e2cbf1bceb23d-X');
 
-router.get('/verify', async (req, res) => { 
+router.post('/verify', async (req, res) => { 
 
   const details = {
     account_number: req.account_number,

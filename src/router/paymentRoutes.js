@@ -10,6 +10,10 @@ const flw = new Flutterwave('FLWPUBK_TEST-faf1fae2cceecc5f5a803645155e9000-X',
 
 router.post('/verify', async (req, res) => { 
 
+
+  res.json({
+    req
+  });
   const details = {
     account_number: req.body.account_number,
     account_bank: req.body.account_bank

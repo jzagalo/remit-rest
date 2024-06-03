@@ -39,7 +39,7 @@ const flw = new Flutterwave('FLWPUBK_TEST-faf1fae2cceecc5f5a803645155e9000-X',
 
 router.post('/verify', async (req, res) => { 
   const reqObj = req.body.item
-  const refId = `akhlm-pstmnpyt-r02ens007_PMCKDU_${parseInt(reqObj.index) + 6}`
+  const refId = `akhlm-pstmnpyt-r02ens007_PMCKDU_${parseInt(reqObj.index) + Math.random()*9 }`
   
  
    const payload = {

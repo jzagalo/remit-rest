@@ -30,8 +30,8 @@ app.use('/payments', paymentRoutes);
 
 
 
-app.get('/mail', (req, res) => {
-  res.send('<h2>Hello world </h2>');
+app.get('/', (req, res) => {
+  res.send('Hello world ');
 });
 
 
@@ -105,6 +105,7 @@ function SendMail(heading, message){
 
 
 app.get('/mock', async (req, res) => {
+  console.log("Mock")
   const transfer = await flw.Transfer.initiate({
     account_bank: "044",
     account_number: "0690000031",

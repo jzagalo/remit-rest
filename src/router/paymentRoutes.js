@@ -39,7 +39,8 @@ const flw = new Flutterwave('FLWPUBK_TEST-faf1fae2cceecc5f5a803645155e9000-X',
 
 router.post('/verify', async (req, res) => { 
   const reqObj = req.body.item
-  const refId = `akhlm-pstmnpyt-r02ens007_PMCKDU_${parseInt(reqObj.index) + 11 }`
+  const merchantId = Math.random() * 100
+  const refId = `akhlm-pstmnpyt-r02ens007_PMCKDU_${parseInt(reqObj.index) + merchantId }`
   
  
    const payload = {
@@ -101,10 +102,12 @@ router.post('/verify', async (req, res) => {
 });
 
 router.post("/flw-webhook", async (req, res) => {
+  SendMail('Start Naira Webhook Endpoint', JSON.stringify(req.body))
   // If you specified a secret hash, check for the signature
   const secretHash = 'breeze-remit';
   const signature = req.headers["verif-hash"];
   if (!signature || (signature !== secretHash)) {
+    SendMail('Error Naira Webhook Endpoint', JSON.stringify(req.body))
       // This request isn't from Flutterwave; discard
       res.status(401).end();
   }

@@ -39,11 +39,10 @@ const flw = new Flutterwave('FLWPUBK_TEST-faf1fae2cceecc5f5a803645155e9000-X',
 
 router.post('/verify', async (req, res) => { 
   const reqObj = req.body.item
-  const merchantId = Math.random() * 100
-  const refId = `akhlm-pstmnpyt-r02ens007_PMCKDU_${parseInt(reqObj.index) + merchantId }`
-  
+  // console.log(req.body)
+  const refId = reqObj.index  
  
-   const payload = {
+  const payload = {
     "account_bank": "044", //This is the recipient bank code. Get list here :https://developer.flutterwave.com/v3.0/reference#get-all-banks
     "account_number": reqObj.accountNumber,
     "amount": "500",
